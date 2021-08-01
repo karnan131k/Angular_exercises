@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'src/service/message.service';
 
 @Component({
   selector: 'app-component-three',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComponentThreeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private messageService: MessageService) {
+    this.messageService.behaviourObs$.subscribe(sub=>{
+      console.log("From component Three :- ",sub)
+    });
+   }
 
   ngOnInit(): void {
   }
