@@ -1,3 +1,32 @@
 <p>component-one works!</p>
 <button class="btn btn-warning" (click)="emit()">Generate Random</button>&nbsp;&nbsp;
 <button class="btn btn-info" appCustomstyle>Change Random Color</button>
+
+<!-- <svg height="600" width="400">
+    <path d="M 0 200 H 200 v -100 L 400 225 L 200 350 L 200 250 H 200 L 0 250 Z" fill="grey" stroke="black"/>
+   
+    Sorry, your browser does not support inline SVG.
+</svg> -->
+<!-- <svg> <circle cx="100" cy="100" r="2" fill="red"/></svg> -->
+<br>
+<!-- <svg height="400" width="600">
+    <path [attr.d]="line" fill="transparent" stroke="black"/>
+</svg> -->
+
+<div class="">
+    <div class="row justify-content-around">
+        <div><h3>Svg drawing area</h3></div>
+        <!-- {{ line }} -->
+    </div>
+    <div class="row justify-content-between">
+        <div class="svgDrawingbox">
+            <svg height="400" width="600" viewBox="0 0 400 600" (click)="mouseClick($event)">
+            <path [attr.d]="line" fill="transparent" stroke="black"/>
+            </svg>
+        </div>
+    </div>
+    <button class="btn btn-warning" (click)="generateShape()">Generate Shape</button>
+    <!-- <div>
+        <p *ngFor="let cordinate of shapeCordinates">{{ cordinate.x }} {{ cordinate.y }}</p>
+    </div> -->
+</div>

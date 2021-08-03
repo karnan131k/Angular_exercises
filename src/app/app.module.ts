@@ -8,6 +8,7 @@ import { ComponentTwoComponent } from './component-two/component-two.component';
 import { ComponentThreeComponent } from './component-three/component-three.component';
 import { MessageService } from 'src/service/message.service';
 import { CustomstyleDirective } from './directive/customstyle.directive';
+import { NgxSvgModule } from 'ngx-svg';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CustomstyleDirective } from './directive/customstyle.directive';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxSvgModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

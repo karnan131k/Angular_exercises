@@ -5,13 +5,11 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-  private behaviourSubject: BehaviorSubject<any>;
-  behaviourObs$ : Observable<any>;
-  constructor() {
-    this.behaviourSubject = new BehaviorSubject<any>(1000);
-    this.behaviourObs$ = this.behaviourSubject.asObservable();
-   }
-   sendData(data: number){
+  private behaviourSubject: BehaviorSubject<any>=new BehaviorSubject<any>(0);
+  behaviourObs$ : Observable<any>=this.behaviourSubject.asObservable();
+
+ 
+   setData(data: number){
     this.behaviourSubject.next(data);
    }
 }

@@ -9,12 +9,14 @@ import { MessageService } from 'src/service/message.service';
 export class ComponentTwoComponent implements OnInit {
 
   constructor(private messageService: MessageService) {
-    this.messageService.behaviourObs$.subscribe(sub=>{
-      console.log("From component Two :- ",sub)
-    })
+    
    }
 
   ngOnInit(): void {
+    console.log('COMPONENTTWO');
+    this.messageService.behaviourObs$.subscribe(sub=>{
+      console.log("From component Two :- ",sub)
+    })
   }
 
 }
