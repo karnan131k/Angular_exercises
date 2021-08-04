@@ -24,7 +24,7 @@ export class AppComponent {
   mouseEventCordinates = [];
   predifineRecangledrawing: boolean;
   customShape: boolean=false;
-  
+  shapeIndex:number;
   //for button colr change
   customtoggle: boolean=false;
   reactangletoggle: boolean=false;
@@ -165,8 +165,16 @@ export class AppComponent {
     this.customtoggle=custom;
     this.reactangletoggle=rect;
     this.circletoggle=cir;
-}
+  }
 
+  deleteShape(i){
+    
+  }
+  getShapeIndex(i){
+    console.log("index"+i);
+    alert("Do you want to delete this shape ?");
+    this.shape_d_paths.splice(i,1);
+  }
 }
 
 
