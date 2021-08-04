@@ -27,6 +27,7 @@
           <div class="svgDrawingbox">
               <svg height="400" width="800"  (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
               <path  *ngFor="let shape_d_path of shape_d_paths" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color"/>
+              <path   [attr.d]="line" fill="transparent" stroke="black"/>
               </svg>
           </div>
       </div>

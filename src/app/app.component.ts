@@ -26,7 +26,7 @@ export class AppComponent {
   customShape: boolean=false;
   
   //for button colr change
-  customtoggle: boolean=true;
+  customtoggle: boolean=false;
   reactangletoggle: boolean=false;
   circletoggle: boolean=false;
  
