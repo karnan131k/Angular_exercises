@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -29,6 +30,8 @@ export class AppComponent {
   customtoggle: boolean=false;
   reactangletoggle: boolean=false;
   circletoggle: boolean=false;
+  
+  isSingleClick: Boolean = true; 
  
   // rondom color generate
   getRandomColor() {
@@ -42,6 +45,7 @@ export class AppComponent {
   // drawing line with every mouse click for custom shape 
   mouseClick($event){
     console.log("hi");
+    
     if (this.customShape==true) {
       this.count++;
       console.log($event);
@@ -81,7 +85,7 @@ export class AppComponent {
       this.line +="L "+element.x+" "+element.y+" ";
     }
     this.line=this.line+" Z";
-    this.shape_d_paths.push({customShape:this.line,color:this.getRandomColor()});
+    this.shape_d_paths.push({customShape:this.line,color:this.getRandomColor(),centerX:'',centerY:''});
     this.cordinates=[];
     this.shapeCordinates=[];
     this.line="";
@@ -118,19 +122,19 @@ export class AppComponent {
       "L "+(this.mouseEventCordinates[0].x+x)+" "+(this.mouseEventCordinates[0].y+y)+" "+
       "L "+this.mouseEventCordinates[0].x+" "+(this.mouseEventCordinates[0].y+y)+" Z";
       // this.line=this.predifinedLine;
-      this.shape_d_paths.push({customShape:this.predifinedLine,color:this.getRandomColor()});
+      this.shape_d_paths.push({customShape:this.predifinedLine,color:this.getRandomColor(),centerX:'',centerY:''});
       console.log("reactangle"+this.predifinedLine);
       this.predifinedLine="";
     }
     // circle drawing
-    if (this.predifineCircledrawing==true) {
+    if (this.predifineCircledrawing==true && this.radius>0) {
       this.predifinedCircleLine = "M "+this.circleX+" "+this.circleY+" "+
       "m -"+this.radius+" 0"+" "+
       'a '+this.radius+","+this.radius+" 0"+" 1,1 "+(this.radius*2)+",0"+" "+
       'a '+this.radius+","+this.radius+" 0"+" 1,1 -"+(this.radius*2)+",0";
       
       // this.line=this.predifinedCircleLine;
-      this.shape_d_paths.push({customShape:this.predifinedCircleLine,color:this.getRandomColor()});
+      this.shape_d_paths.push({customShape:this.predifinedCircleLine,color:this.getRandomColor(),centerX:this.circleX,centerY:this.circleY});
       this.predifinedCircleLine=""
       console.log("circle"+this.predifinedCircleLine);
     }
@@ -167,13 +171,64 @@ export class AppComponent {
     this.circletoggle=cir;
   }
 
-  deleteShape(i){
+  selectedLine:string="";
+  selectedShapeIndex:number;
+  selectShape(i){
+    console.log("select shape"+i);
+    this.isSingleClick = true;
+    setTimeout(()=>{
+      if(this.isSingleClick){
+           this.selectedShapeIndex=i;
+           if(this.selectedLine==""){
+             this.selectedLine=this.shape_d_paths[i].customShape;
+             this.predifineCircledrawing=false //to avoid draw another circle
+             //logic for moving circle
+             if(this.shape_d_paths[i].centerX && this.shape_d_paths[i].centerY ){
+               console.log("i am circle");
+              
+             }
+           }else{
+            this.selectedLine="";
+            this.predifineCircledrawing=true //to enable draw another circle
+           }
+
+           console.log(this.selectedLine);
+          //  this.selectedLine=this.shape_d_paths[i].customShape;
+      }
+   },250)
+  }
+  index:number;
+  getShapeIndex(){
+    this.isSingleClick = false;
+    console.log("index"+this.selectedShapeIndex);
+    if(this.selectedLine!=""){
+      alert("Do you want to delete this shape ?");
+    this.shape_d_paths.splice(this.selectedShapeIndex,1);
+    this.selectedLine="";
+    }
     
   }
-  getShapeIndex(i){
-    console.log("index"+i);
-    alert("Do you want to delete this shape ?");
-    this.shape_d_paths.splice(i,1);
+  
+  selectedShapeMovingCordinates=[];//selected shape mouse down and mous up codinates store array
+  movingDistance; // moving length
+  //selectedShapeMouseDown function for get mousedown cordinates
+  selectedShapeMouseDown($event){
+    console.log("i am from selectedShapeMouseDown");
+    this.selectedShapeMovingCordinates.push({x:$event.offsetX, y:$event.offsetY});
+  }
+  //selectedShapeMouseUp function for get mouseup cordinates
+  selectedShapeMouseUp($event){
+    if(this.selectedLine!=""){
+      console.log("i am from selectedShapeMouseUp");
+      this.selectedShapeMovingCordinates.push({x:$event.offsetX, y:$event.offsetY});
+      if (this.selectedShapeMovingCordinates.length==2) {
+        var x= this.selectedShapeMovingCordinates[1].x-this.selectedShapeMovingCordinates[0].x;
+        var y= this.selectedShapeMovingCordinates[1].y-this.selectedShapeMovingCordinates[0].y;
+        this.movingDistance = Math.sqrt((x*x) + (y*y));
+        console.log("x =" +x, 'y ='+y);
+        console.log("moving distance "+this.movingDistance);
+      }
+    }
   }
 }
 

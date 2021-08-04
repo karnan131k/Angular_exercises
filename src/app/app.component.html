@@ -25,9 +25,12 @@
       </div>
       <div class="row justify-content-between">
           <div class="svgDrawingbox">
-              <svg height="400" width="800"  (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
-              <path  *ngFor="let shape_d_path of shape_d_paths; index as i" (dblclick)="getShapeIndex(i)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5"/>
+              <svg height="400" width="800"  (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)">
+              <path  *ngFor="let shape_d_path of shape_d_paths; index as i" (click)="selectShape(i)"   [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5"/>
               <path   [attr.d]="line" fill="transparent" stroke="black" stroke-width="5"/>
+              <g>
+                <path (click)="selectShape(0)" (dblclick)="getShapeIndex()"  (mousedown)="selectedShapeMouseDown($event)"  [attr.d]="selectedLine" fill="transparent" stroke="black" stroke-width="5"/>
+              </g>
               </svg>
           </div>
       </div>
@@ -35,20 +38,11 @@
       <button [ngClass]="{'activecolor' : reactangletoggle, 'notactivecolor': !reactangletoggle}" class="btn btn-info" (click)="generatePredifinedReactangleShape()">Generate Rectangle Shape</button>&nbsp;
       <button [ngClass]="{'activecolor' : circletoggle, 'notactivecolor': !circletoggle}" class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>&nbsp;
       <button class="btn btn-danger">Delete</button>
-      <!-- <br>
-      <br>
-      <div><h3>Svg predifine drawing area</h3></div>
-      <div class="row justify-content-between">
-          <div class="svgDrawingbox">
-              <svg height="400" width="600" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" >
-              <path [attr.d]="predifinedLine" fill="transparent" stroke="black"/>
-              </svg>
-          </div>
-      </div> -->
-      <!-- <button class="btn btn-warning" (Click)="generatePredifinedShape()" >Generate predifined Shape</button> -->
-      <!-- <div>
-          <p *ngFor="let cordinate of shapeCordinates">{{ cordinate.x }} {{ cordinate.y }}</p>
-      </div> -->
+
+      <svg height="400" width="800">
+        <rect x="5" y="5" width="40" height="40" fill="red"
+        transform="translate(0 150)" />
+      </svg>
   </div>
   </div>
 </div>
