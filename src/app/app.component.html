@@ -18,5 +18,35 @@
     <div class="col-sm-12">
       <router-outlet></router-outlet>
     </div>
+    <div class="">
+      <div class="row justify-content-around">
+          <div><h3>Svg drawing area</h3></div>
+          <!-- {{ line }} -->
+      </div>
+      <div class="row justify-content-between">
+          <div class="svgDrawingbox">
+              <svg height="400" width="800"  (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
+              <path [attr.d]="line" fill="transparent" stroke="black"/>
+              </svg>
+          </div>
+      </div>
+      <button class="btn btn-warning" (click)="generateShape()">Generate custom Shape</button>&nbsp;
+      <button class="btn btn-info" (click)="generatePredifinedShape()">Generate Rectangle Shape</button>&nbsp;
+      <button class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>
+      <!-- <br>
+      <br>
+      <div><h3>Svg predifine drawing area</h3></div>
+      <div class="row justify-content-between">
+          <div class="svgDrawingbox">
+              <svg height="400" width="600" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" >
+              <path [attr.d]="predifinedLine" fill="transparent" stroke="black"/>
+              </svg>
+          </div>
+      </div> -->
+      <!-- <button class="btn btn-warning" (Click)="generatePredifinedShape()" >Generate predifined Shape</button> -->
+      <!-- <div>
+          <p *ngFor="let cordinate of shapeCordinates">{{ cordinate.x }} {{ cordinate.y }}</p>
+      </div> -->
+  </div>
   </div>
 </div>
