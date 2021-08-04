@@ -26,13 +26,13 @@
       <div class="row justify-content-between">
           <div class="svgDrawingbox">
               <svg height="400" width="800"  (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)">
-              <path [attr.d]="line" fill="transparent" stroke="black"/>
+              <path  *ngFor="let shape_d_path of shape_d_paths" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color"/>
               </svg>
           </div>
       </div>
-      <button class="btn btn-warning" (click)="generateShape()">Generate custom Shape</button>&nbsp;
-      <button class="btn btn-info" (click)="generatePredifinedShape()">Generate Rectangle Shape</button>&nbsp;
-      <button class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>
+      <button [ngClass]="{'activecolor' : customtoggle, 'notactivecolor': !customtoggle}" class="btn btn-info" (click)="generateShape()" >Generate custom Shape</button>&nbsp;
+      <button [ngClass]="{'activecolor' : reactangletoggle, 'notactivecolor': !reactangletoggle}" class="btn btn-info" (click)="generatePredifinedReactangleShape()">Generate Rectangle Shape</button>&nbsp;
+      <button [ngClass]="{'activecolor' : circletoggle, 'notactivecolor': !circletoggle}" class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>
       <!-- <br>
       <br>
       <div><h3>Svg predifine drawing area</h3></div>
