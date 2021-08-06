@@ -1,7 +1,7 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { DOCUMENT } from '@angular/common'; 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,7 +32,15 @@ export class AppComponent {
   circletoggle: boolean=false;
   
   isSingleClick: Boolean = true; 
- 
+//  -----------------------------------------
+    // SHAPE moving
+  selectedShapeMovingCordinates=[];//selected shape mouse down and mous up codinates store array
+  movingDistance:number; // moving length
+  newCircleCenterX:number;
+  newCircleCenterY:number;
+  constructor(@Inject(DOCUMENT) document){
+
+  }
   // rondom color generate
   getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -170,35 +178,51 @@ export class AppComponent {
     this.reactangletoggle=rect;
     this.circletoggle=cir;
   }
-
+// -----------------------------------------------
   selectedLine:string="";
   selectedShapeIndex:number;
+  outlineTop:number;
+  outLineWidth:number;
   selectShape(i){
     console.log("select shape"+i);
     this.isSingleClick = true;
     setTimeout(()=>{
       if(this.isSingleClick){
            this.selectedShapeIndex=i;
+           this.selectedShapeMovingCordinates.push({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
+           var groupElement = document.querySelector('#selectedGroup');
+           var bboxGroup = groupElement.getBoundingClientRect();
+           this.outLineWidth= bboxGroup.width;
+           this.outlineTop = bboxGroup.height;
+           console.log(bboxGroup);
+           
            if(this.selectedLine==""){
              this.selectedLine=this.shape_d_paths[i].customShape;
              this.predifineCircledrawing=false //to avoid draw another circle
-             //logic for moving circle
-             if(this.shape_d_paths[i].centerX && this.shape_d_paths[i].centerY ){
-               console.log("i am circle");
-              
-             }
+            //  logic for moving circle
+            //  if((this.selectedShapeMovingCordinates.length==2) && this.movingDistance>0){
+            //    console.log("i am circle");
+            //    var newMovedCircleLine = "M "+this.newCircleCenterX+" "+this.newCircleCenterY+" "+
+            //    "m -"+this.movingDistance+" 0"+" "+
+            //    'a '+this.movingDistance+","+this.movingDistance+" 0"+" 1,1 "+(this.movingDistance*2)+",0"+" "+
+            //    'a '+this.movingDistance+","+this.movingDistance+" 0"+" 1,1 -"+(this.movingDistance*2)+",0";
+            //    this.selectedLine=this.shape_d_paths[i]= newMovedCircleLine;
+            //    this.selectedLine= newMovedCircleLine;
+            //    console.log(newMovedCircleLine);
+            //  }
            }else{
             this.selectedLine="";
             this.predifineCircledrawing=true //to enable draw another circle
+            this.selectedShapeMovingCordinates=[]; // to delete the moving start point
            }
-
            console.log(this.selectedLine);
           //  this.selectedLine=this.shape_d_paths[i].customShape;
       }
    },250)
   }
+
   index:number;
-  getShapeIndex(){
+  deleteShapeIndex(){
     this.isSingleClick = false;
     console.log("index"+this.selectedShapeIndex);
     if(this.selectedLine!=""){
@@ -206,15 +230,14 @@ export class AppComponent {
     this.shape_d_paths.splice(this.selectedShapeIndex,1);
     this.selectedLine="";
     }
-    
   }
   
-  selectedShapeMovingCordinates=[];//selected shape mouse down and mous up codinates store array
-  movingDistance; // moving length
   //selectedShapeMouseDown function for get mousedown cordinates
   selectedShapeMouseDown($event){
     console.log("i am from selectedShapeMouseDown");
-    this.selectedShapeMovingCordinates.push({x:$event.offsetX, y:$event.offsetY});
+    // this.selectedShapeMovingCordinates.push({x:$event.offsetX, y:$event.offsetY});
+    // this.selectedShapeMovingCordinates.push({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
+    this.selectedShapeMovingCordinates=[];
   }
   //selectedShapeMouseUp function for get mouseup cordinates
   selectedShapeMouseUp($event){
@@ -225,11 +248,41 @@ export class AppComponent {
         var x= this.selectedShapeMovingCordinates[1].x-this.selectedShapeMovingCordinates[0].x;
         var y= this.selectedShapeMovingCordinates[1].y-this.selectedShapeMovingCordinates[0].y;
         this.movingDistance = Math.sqrt((x*x) + (y*y));
+        this.newCircleCenterX=this.selectedShapeMovingCordinates[1].x;
+        this.newCircleCenterY=this.selectedShapeMovingCordinates[1].y;
         console.log("x =" +x, 'y ='+y);
         console.log("moving distance "+this.movingDistance);
+        console.log("moving center point "+this.newCircleCenterX,this.newCircleCenterY);
+        console.log("length",this.selectedShapeMovingCordinates.length)
       }
     }
   }
+  // drag event
+  dragEvent($event){
+    // console.log($event)
+    var selectedElement = false;
+    var svg = event.target;
+    svg.addEventListener('mousedown', startDrag);
+    svg.addEventListener('mousemove', drag);
+    svg.addEventListener('mouseup', endDrag);
+    svg.addEventListener('mouseleave', endDrag);
+    function startDrag(event) {
+      if (event.target.classList.contains('draggable')) {
+        selectedElement = event.target;
+        console.log(selectedElement);
+      }
+    }
+    function drag(event) {
+        if (selectedElement) {
+            
+        }
+    }
+    function endDrag(event) {
+        selectedElement = null;
+    }
+  }
+  
+   
 }
 
 
