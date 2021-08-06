@@ -236,6 +236,7 @@ export class AppComponent {
             //  }
            }else{
             this.selectedLine="";
+            this.selectedShapeControlPoints=[];
             this.predifineCircledrawing=true //to enable draw another circle
             this.selectedShapeMovingCordinates=[]; // to delete the moving start point
            }
