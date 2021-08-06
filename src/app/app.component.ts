@@ -2,13 +2,14 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common'; 
+import { Guid } from 'guid-typescript';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
+  public id: Guid;
   title = 'demo-project';
   cordinates=[];
   shapeCordinates=[];
@@ -23,6 +24,7 @@ export class AppComponent {
   predifinedLine:string="";
   predifinedCircleLine:string="";
   mouseEventCordinates = [];
+  selectedShapeControlPoints=[];
   predifineRecangledrawing: boolean;
   customShape: boolean=false;
   shapeIndex:number;
@@ -38,6 +40,10 @@ export class AppComponent {
   movingDistance:number; // moving length
   newCircleCenterX:number;
   newCircleCenterY:number;
+
+  selectedLine:string="";
+  selectedShapeIndex:number;
+ 
   constructor(@Inject(DOCUMENT) document){
 
   }
@@ -52,16 +58,12 @@ export class AppComponent {
   }
   // drawing line with every mouse click for custom shape 
   mouseClick($event){
-    console.log("hi");
-    
     if (this.customShape==true) {
       this.count++;
-      console.log($event);
       this.cordinates.push({x:$event.offsetX,y:$event.offsetY});
       if(this.cordinates.length>=2){
           if(this.cordinates[this.cordinates.length-1].x == this.cordinates[this.cordinates.length-2].x && this.cordinates[this.cordinates.length-1].y == this.cordinates[this.cordinates.length-2].y){
             this.cordinates.forEach(val => this.shapeCordinates.push(Object.assign({}, val)));
-            console.log('change');
             this.cordinates.splice(0,this.cordinates.length-1);
             this.createShape();
           }
@@ -70,11 +72,6 @@ export class AppComponent {
         this.line +="M "+$event.offsetX+" "+$event.offsetY+" ";
       }
       this.line +="L "+$event.offsetX+" "+$event.offsetY+" ";
-      console.log(this.line);
-      console.log(this.cordinates);
-      console.log(this.shapeCordinates);
-      console.log($event.offsetX,$event.offsetY);
-      console.log("works");
     }
   }
   // generate custom shape after button click
@@ -83,23 +80,22 @@ export class AppComponent {
     this.line="";
     for (let i = 0; i < this.shapeCordinates.length-1; i++) {
       const element = this.shapeCordinates[i];
-      console.log(element.x,element.y);
       if(i==0){
         const elementzero = this.shapeCordinates[i];
         this.line = "M "+elementzero.x+" "+elementzero.y+" ";
-        console.log(this.line);
-        console.log("cor"+elementzero.x,elementzero.y);
       }
       this.line +="L "+element.x+" "+element.y+" ";
     }
     this.line=this.line+" Z";
-    this.shape_d_paths.push({customShape:this.line,color:this.getRandomColor(),centerX:'',centerY:''});
+    this.shape_d_paths.push({
+                              customShape:this.line,
+                              color:this.getRandomColor(),
+                              centerX:'',
+                              centerY:'',
+                              id:Guid.create()});
     this.cordinates=[];
     this.shapeCordinates=[];
     this.line="";
-    console.log(this.cordinates);
-    console.log(this.shapeCordinates);
-    console.log(this.line);
   }
 
   //mouse up and down event shape drawing
@@ -109,7 +105,6 @@ export class AppComponent {
       this.mouseEventCordinates.push({x:$event.offsetX, y:$event.offsetY});
       this.circleX = $event.offsetX;
       this.circleY = $event.offsetY
-      console.log("circle center cordinates"+this.circleX, this.circleY);
     }
   }
   mouseUp($event){
@@ -119,8 +114,6 @@ export class AppComponent {
       var x= this.mouseEventCordinates[1].x-this.mouseEventCordinates[0].x;
       var y= this.mouseEventCordinates[1].y-this.mouseEventCordinates[0].y;
       this.radius = Math.sqrt((x*x) + (y*y));
-      console.log("x =" +x, 'y ='+y);
-      console.log("circle radius"+this.radius);
     }
     
     //react angle drawing
@@ -130,8 +123,13 @@ export class AppComponent {
       "L "+(this.mouseEventCordinates[0].x+x)+" "+(this.mouseEventCordinates[0].y+y)+" "+
       "L "+this.mouseEventCordinates[0].x+" "+(this.mouseEventCordinates[0].y+y)+" Z";
       // this.line=this.predifinedLine;
-      this.shape_d_paths.push({customShape:this.predifinedLine,color:this.getRandomColor(),centerX:'',centerY:''});
-      console.log("reactangle"+this.predifinedLine);
+      this.shape_d_paths.push({
+                                customShape:this.predifinedLine,
+                                color:this.getRandomColor(),
+                                centerX:'',
+                                centerY:'',
+                                id:Guid.create()
+                              });
       this.predifinedLine="";
     }
     // circle drawing
@@ -142,7 +140,13 @@ export class AppComponent {
       'a '+this.radius+","+this.radius+" 0"+" 1,1 -"+(this.radius*2)+",0";
       
       // this.line=this.predifinedCircleLine;
-      this.shape_d_paths.push({customShape:this.predifinedCircleLine,color:this.getRandomColor(),centerX:this.circleX,centerY:this.circleY});
+      this.shape_d_paths.push({
+                                customShape:this.predifinedCircleLine,
+                                color:this.getRandomColor(),
+                                centerX:this.circleX,
+                                centerY:this.circleY,
+                                id:Guid.create()
+                              });
       this.predifinedCircleLine=""
       console.log("circle"+this.predifinedCircleLine);
     }
@@ -179,25 +183,45 @@ export class AppComponent {
     this.circletoggle=cir;
   }
 // -----------------------------------------------
-  selectedLine:string="";
-  selectedShapeIndex:number;
-  outlineTop:number;
-  outLineWidth:number;
+  
   selectShape(i){
     console.log("select shape"+i);
     this.isSingleClick = true;
     setTimeout(()=>{
       if(this.isSingleClick){
            this.selectedShapeIndex=i;
+           //for circle moveing
            this.selectedShapeMovingCordinates.push({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
-           var groupElement = document.querySelector('#selectedGroup');
-           var bboxGroup = groupElement.getBoundingClientRect();
-           this.outLineWidth= bboxGroup.width;
-           this.outlineTop = bboxGroup.height;
-           console.log(bboxGroup);
+           console.log("shape selected");
+           
            
            if(this.selectedLine==""){
-             this.selectedLine=this.shape_d_paths[i].customShape;
+             var gpathId:string = this.shape_d_paths[i].id;
+             var groupElement =document.getElementById(gpathId);// document.querySelector('#selectedGroup');
+             console.log("id"+gpathId)
+            var bboxGroup = (groupElement as any).getBBox();
+            console.log(bboxGroup);
+            //selected line gererate
+            this.selectedLine= "M "+bboxGroup.x+" "+bboxGroup.y+" "+
+                               "L "+(bboxGroup.x+bboxGroup.width)+" "+bboxGroup.y+" "+
+                               "L "+(bboxGroup.x+bboxGroup.width)+" "+(bboxGroup.y+bboxGroup.height)+" "+
+                               "L "+bboxGroup.x+" "+(bboxGroup.y+bboxGroup.height)+" z";
+                               console.log(this.selectedLine);
+            //selected shape contro points generate
+           
+            // this.selectedShapeControlPoints.push( {cx: bboxGroup.x, cy: bboxGroup.y});
+            this.selectedShapeControlPoints=[
+              {cx: bboxGroup.x, cy: bboxGroup.y},
+              {cx: (bboxGroup.x+bboxGroup.width), cy: bboxGroup.y},
+              {cx: (bboxGroup.x+bboxGroup.width), cy: (bboxGroup.y+bboxGroup.height)},
+              {cx: bboxGroup.x, cy: (bboxGroup.y+bboxGroup.height)},
+
+              {cx: (bboxGroup.x+(bboxGroup.width)/2), cy: bboxGroup.y},
+              {cx: (bboxGroup.x+(bboxGroup.width)/2), cy: (bboxGroup.y+bboxGroup.height)},
+              {cx: bboxGroup.x, cy: (bboxGroup.y+(bboxGroup.height)/2)},
+              {cx: (bboxGroup.x+bboxGroup.width), cy: (bboxGroup.y+(bboxGroup.height)/2)}
+            ];
+            console.log(this.selectedShapeControlPoints);
              this.predifineCircledrawing=false //to avoid draw another circle
             //  logic for moving circle
             //  if((this.selectedShapeMovingCordinates.length==2) && this.movingDistance>0){
@@ -215,7 +239,7 @@ export class AppComponent {
             this.predifineCircledrawing=true //to enable draw another circle
             this.selectedShapeMovingCordinates=[]; // to delete the moving start point
            }
-           console.log(this.selectedLine);
+           
           //  this.selectedLine=this.shape_d_paths[i].customShape;
       }
    },250)
@@ -229,6 +253,7 @@ export class AppComponent {
       alert("Do you want to delete this shape ?");
     this.shape_d_paths.splice(this.selectedShapeIndex,1);
     this.selectedLine="";
+    this.predifineCircledrawing=true //to enable draw another circle
     }
   }
   
