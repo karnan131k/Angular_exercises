@@ -25,17 +25,20 @@
       </div>
       <div class="row justify-content-between">
           <div class="svgDrawingbox">
-              <svg  width="800" height="400"   (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)">
+              <svg  width="800" height="400"    (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)" (mouseup)="rotateClickUpPoint($event)" (mousemove)="rotationMouseMove($event)" (mousemove)="customShapeMove($event)">
                 <!-- [attr.transform]="'translate('+tx+','+ty+')'" -->
-                <g >
-                  <path   *ngFor="let shape_d_path of shape_d_paths; index as i" [attr.id]="shape_d_path.id" draggable="true" clickable="true" (click)="selectShape(i)" (dblclick)="deleteShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" />
+                <g id="rotateShapeId">
+                  <path   *ngFor="let shape_d_path of shape_d_paths; index as i" [attr.id]="shape_d_path.id" draggable="true" clickable="true" (click)="selectShape(i)" (dblclick)="deleteShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'" />
                   <!-- <path  *ngFor="let shape_d_path of shape_d_paths; index as i" id="#draw" (click)="selectShape(i,$event)" (dblclick)="getShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" transform=""/> -->
                 </g>
               <path   [attr.d]="line" fill="transparent" stroke="black" stroke-width="5"/>
               <g>
                
-                <path (click)="selectShape(0)"   (mousedown)="selectedShapeMouseDown($event)"  [attr.d]="selectedLine" fill="transparent" stroke="black" stroke-dasharray="5,5"/>
-                <circle *ngFor="let point of selectedShapeControlPoints"  (mousedown)="reSizeClickDownPoint($event)" [attr.cx]="point.cx" [attr.cy]="point.cy" r="5" fill="red" [ngStyle]="{'cursor':point.pointer}"/>
+                <path (click)="selectShape(0)"   (mousedown)="selectedShapeMouseDown($event)"  [attr.d]="selectedLine" fill="transparent" stroke="black" stroke-dasharray="5,5"  [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'"/>
+                <circle *ngFor="let point of selectedShapeControlPoints"  (mousedown)="reSizeClickDownPoint($event)" [attr.cx]="point.cx" [attr.cy]="point.cy" r="5" fill="red" [ngStyle]="{'cursor':point.pointer}"  [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'"/>
+                <path [attr.d]="rotateLine" fill="transparent"  stroke="black" stroke-dasharray="5,5" style="cursor:pointer;"  [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'"></path>
+                <circle *ngFor="let point of rotatePoint"  (mousedown)="rotateClickDownPoint()" [attr.cx]="point.cx" [attr.cy]="point.cy" r="5" fill="red" [ngStyle]="{'cursor':point.pointer}"  [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'"/>
+
                 <!-- <rect x="120" y="100" width="100" height="200" rx="15" /> -->
                 <!-- <rect [attr.x]="outlineX" [attr.y]="outlineY" [attr.width]="outLineWidth" [attr.height]="outlineHeght" (click)="selectShape(0)" (dblclick)="deleteShapeIndex()"  (mousedown)="selectedShapeMouseDown($event)" style="stroke-width:1;" ></rect> -->
               </g>
@@ -49,10 +52,10 @@
       <button [ngClass]="{'activecolor' : reactangletoggle, 'notactivecolor': !reactangletoggle}" class="btn btn-info" (click)="generatePredifinedReactangleShape()">Generate Rectangle Shape</button>&nbsp;
       <button [ngClass]="{'activecolor' : circletoggle, 'notactivecolor': !circletoggle}" class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>&nbsp;
       <button class="btn btn-danger" (click)="deleteShapeIndex()">Delete</button>
-      <svg height="400" width="800">
+      <!-- <svg height="400" width="800">
         <rect x="5" y="5" width="40" height="40" fill="red"
         transform="translate(0 150)" />
-      </svg>
+      </svg> -->
   </div>
   </div>
 </div>

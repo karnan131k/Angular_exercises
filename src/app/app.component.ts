@@ -52,6 +52,15 @@ export class AppComponent {
   editableShapeIndex: number;
   matchingindex: any;
   shapeDpathCordinates=[];
+  rotateLine: string;
+  rotatePointX: any;
+  rotatePoint=[];
+  rotationCordinatesPoint=[];
+  rotateShapeIndex: any;
+  rotationAngle: number;
+  isCustomMove: boolean=false;
+  rotationCenterX: any;
+  rotationCenterY: any;
  
   constructor(@Inject(DOCUMENT) document){
 
@@ -212,6 +221,7 @@ editablepoints=[];
     setTimeout(()=>{
       if(this.clickevent===1){
            this.selectedShapeIndex=i;
+           this.rotateShapeIndex=i;
            //for circle moveing
           //  this.selectedShapeMovingCordinates.push({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
            console.log("shape selected");
@@ -253,6 +263,7 @@ editablepoints=[];
         }
         console.log(this.editablepoints);
         }
+        //write code here for custome shape control points
       }
       this.clickevent=0;
    },250)
@@ -270,84 +281,119 @@ editablepoints=[];
     this.predifineCircledrawing=true //to enable draw another circle
     }
   }
-  
+  isSelected:boolean=false;
   //selectedShapeMouseDown function for get mousedown cordinates
   selectedShapeMouseDown($event){
     // this.selectedShapeMovingCordinates.push({x:$event.offsetX, y:$event.offsetY});
-    if (this.selectedLine != "") {
-      console.log("i am from selectedShapeMouseDown");
-      this.selectedShapeMovingCordinates[0]=({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
-      console.log(this.selectedShapeMovingCordinates)
-    }else{
-      
-    }
+    setTimeout(() => {
+      if (this.selectedLine != "") {
+        console.log("i am from selectedShapeMouseDown");
+        this.selectedShapeMovingCordinates[0]=({x:this.shape_d_paths[this.selectedShapeIndex].centerX, y:this.shape_d_paths[this.selectedShapeIndex].centerY});
+        console.log(this.selectedShapeMovingCordinates)
+      }else{
+        
+      }
+     this.isSelected=true; 
+    }, 200);
+    this.isSelected=false; 
+    this.isCustomMove=true
     // this.selectedShapeMovingCordinates=[];
+  }
+  customShapeMove($event){
+    if (this.isCustomMove==true) {
+      // console.log($event)
+      var resizeUppointX = $event.offsetX;
+      var resizeUppointY = $event.offsetY;
+      var groupElement =document.getElementById(this.shape_d_paths[this.rotateShapeIndex].id);// document.querySelector('#selectedGroup');
+      var bboxGroup = (groupElement as any).getBBox();
+      var x= bboxGroup.x+(bboxGroup.width/2);
+      var y= bboxGroup.y-(bboxGroup.height/2);
+      var tx=resizeUppointX-x;
+      var ty=resizeUppointY-y;
+      this.tx=tx;
+      this.ty=ty;
+    }
+
   }
   //selectedShapeMouseUp function for get mouseup cordinates
   selectedShapeMouseUp($event){
-    if(this.selectedLine !="" ){
-      console.log("i am from selectedShapeMouseUp");
-      this.selectedShapeMovingCordinates[1]=({x:$event.offsetX, y:$event.offsetY});
-      console.log(this.selectedShapeMovingCordinates)
-      if (this.selectedShapeMovingCordinates.length==2) {
-        var x= this.selectedShapeMovingCordinates[1].x-this.selectedShapeMovingCordinates[0].x;
-        var y= this.selectedShapeMovingCordinates[1].y-this.selectedShapeMovingCordinates[0].y;
-        this.movingDistance = Math.sqrt((x*x) + (y*y));
-        this.newCircleCenterX=this.selectedShapeMovingCordinates[1].x;
-        this.newCircleCenterY=this.selectedShapeMovingCordinates[1].y;
-        console.log("x =" +x, 'y ='+y);
-        console.log("moving distance "+this.movingDistance);
-        console.log("moving center point "+this.newCircleCenterX,this.newCircleCenterY);
-        console.log("length",this.selectedShapeMovingCordinates.length);
-
-        if(this.shape_d_paths[this.selectedShapeIndex].name=="rect"){
-              console.log("moving square");
-              var x=this.selectedShapeMovingCordinates[1].x-((this.shape_d_paths[this.selectedShapeIndex].width)/2);
-              var y=this.selectedShapeMovingCordinates[1].y-((this.shape_d_paths[this.selectedShapeIndex].height)/2);
-              var w=this.shape_d_paths[this.selectedShapeIndex].width;
-              var h=this.shape_d_paths[this.selectedShapeIndex].height;
-              var newSquareLine= "M "+x+" "+y+" "+
-                                 "L "+(x+w)+" "+y+" "+
-                                 "L "+(x+w)+" "+(y+h)+" "+
-                                 "L "+x+" "+(y+h)+" Z";
-               console.log(this.shape_d_paths[this.selectedShapeIndex].customShape);
-               this.shape_d_paths[this.selectedShapeIndex].customShape=newSquareLine;
-               this.shape_d_paths[this.selectedShapeIndex].centerX=x+(x/2);
-               this.shape_d_paths[this.selectedShapeIndex].centerY=y+(y/2);
-               console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
-               this.selectedLine="";
-              this.selectedShapeControlPoints=[];
-
-        }else if(this.shape_d_paths[this.selectedShapeIndex].name=="circle"){
-            console.log("moving circle")
-               var newMovedCircleLine = "M "+this.newCircleCenterX+" "+this.newCircleCenterY+" "+
-               "m -"+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" "+
-               'a '+this.shape_d_paths[this.selectedShapeIndex].radius+","+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" 1,1 "+(this.shape_d_paths[this.selectedShapeIndex].radius*2)+",0"+" "+
-               'a '+this.shape_d_paths[this.selectedShapeIndex].radius+","+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" 1,1 -"+(this.shape_d_paths[this.selectedShapeIndex].radius*2)+",0";
-               console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
-               this.shape_d_paths[this.selectedShapeIndex].customShape=newMovedCircleLine;
-               this.shape_d_paths[this.selectedShapeIndex].centerX=this.newCircleCenterX;
-               this.shape_d_paths[this.selectedShapeIndex].centerY=this.newCircleCenterY;
-               console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
-               console.log(newMovedCircleLine);
-              //  this.selectedLine= newMovedCircleLine;
-              //  var gpathId:string = this.shape_d_paths[this.selectedShapeIndex].id;
-              //  this.drawSvgBox(gpathId);;
-              this.selectedLine="";
-              this.selectedShapeControlPoints=[];
-        }else{
-          var tx=this.selectedShapeMovingCordinates[1].x-this.customStartPoints[0].x;
-          var ty=this.selectedShapeMovingCordinates[1].y-this.customStartPoints[0].y;
-          this.tx=tx;
-          this.ty=ty;
-          this.customStartPoints=[];
-          this.selectedLine="";
-          this.selectedShapeControlPoints=[];
-          
+    if(this.isSelected==true){
+      if(this.selectedLine !="" ){
+        console.log("i am from selectedShapeMouseUp");
+        this.selectedShapeMovingCordinates[1]=({x:$event.offsetX, y:$event.offsetY});
+        console.log(this.selectedShapeMovingCordinates)
+        if (this.selectedShapeMovingCordinates.length==2) {
+          var x= this.selectedShapeMovingCordinates[1].x-this.selectedShapeMovingCordinates[0].x;
+          var y= this.selectedShapeMovingCordinates[1].y-this.selectedShapeMovingCordinates[0].y;
+          this.movingDistance = Math.sqrt((x*x) + (y*y));
+          this.newCircleCenterX=this.selectedShapeMovingCordinates[1].x;
+          this.newCircleCenterY=this.selectedShapeMovingCordinates[1].y;
+          console.log("x =" +x, 'y ='+y);
+          console.log("moving distance "+this.movingDistance);
+          console.log("moving center point "+this.newCircleCenterX,this.newCircleCenterY);
+          console.log("length",this.selectedShapeMovingCordinates.length);
+  
+          if(this.shape_d_paths[this.selectedShapeIndex].name=="rect"){
+                console.log("moving square");
+                var x=this.selectedShapeMovingCordinates[1].x-((this.shape_d_paths[this.selectedShapeIndex].width)/2);
+                var y=this.selectedShapeMovingCordinates[1].y-((this.shape_d_paths[this.selectedShapeIndex].height)/2);
+                var w=this.shape_d_paths[this.selectedShapeIndex].width;
+                var h=this.shape_d_paths[this.selectedShapeIndex].height;
+                var newSquareLine= "M "+x+" "+y+" "+
+                                   "L "+(x+w)+" "+y+" "+
+                                   "L "+(x+w)+" "+(y+h)+" "+
+                                   "L "+x+" "+(y+h)+" Z";
+                 console.log(this.shape_d_paths[this.selectedShapeIndex].customShape);
+                 this.shape_d_paths[this.selectedShapeIndex].customShape=newSquareLine;
+                 this.shape_d_paths[this.selectedShapeIndex].centerX=x+(x/2);
+                 this.shape_d_paths[this.selectedShapeIndex].centerY=y+(y/2);
+                 console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
+                 this.selectedLine="";
+                this.selectedShapeControlPoints=[];
+  
+          }else if(this.shape_d_paths[this.selectedShapeIndex].name=="circle"){
+              console.log("moving circle")
+                 var newMovedCircleLine = "M "+this.newCircleCenterX+" "+this.newCircleCenterY+" "+
+                 "m -"+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" "+
+                 'a '+this.shape_d_paths[this.selectedShapeIndex].radius+","+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" 1,1 "+(this.shape_d_paths[this.selectedShapeIndex].radius*2)+",0"+" "+
+                 'a '+this.shape_d_paths[this.selectedShapeIndex].radius+","+this.shape_d_paths[this.selectedShapeIndex].radius+" 0"+" 1,1 -"+(this.shape_d_paths[this.selectedShapeIndex].radius*2)+",0";
+                 console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
+                 this.shape_d_paths[this.selectedShapeIndex].customShape=newMovedCircleLine;
+                 this.shape_d_paths[this.selectedShapeIndex].centerX=this.newCircleCenterX;
+                 this.shape_d_paths[this.selectedShapeIndex].centerY=this.newCircleCenterY;
+                 console.log(this.shape_d_paths[this.selectedShapeIndex].customShape)
+                 console.log(newMovedCircleLine);
+                //  this.selectedLine= newMovedCircleLine;
+                //  var gpathId:string = this.shape_d_paths[this.selectedShapeIndex].id;
+                //  this.drawSvgBox(gpathId);;
+                this.selectedLine="";
+                this.selectedShapeControlPoints=[];
+          }else{
+            console.log("custom shape movung");
+            
+            // var tx=this.selectedShapeMovingCordinates[1].x-this.customStartPoints[0].x;
+            // var ty=this.selectedShapeMovingCordinates[1].y-this.customStartPoints[0].y;
+            // this.tx=tx;
+            // this.ty=ty;
+            // this.customStartPoints=[];
+            // this.selectedLine="";
+            // this.selectedShapeControlPoints=[];
+            // this.rotateLine="";
+            // this.rotatePoint=[];
+            
+          }
         }
       }
     }
+    this.isSelected=false;
+    this.isCustomMove=false;
+    this.customStartPoints=[];
+            this.selectedLine="";
+            this.selectedShapeControlPoints=[];
+            this.rotateLine="";
+            this.rotatePoint=[];
   }
+  
   drawSvgBox(gpathId){
     var groupElement =document.getElementById(gpathId);// document.querySelector('#selectedGroup');
             console.log("id"+gpathId);
@@ -373,16 +419,22 @@ editablepoints=[];
               {cx: (bboxGroup.x+(bboxGroup.width)/2), cy: bboxGroup.y,pointer:'n-resize'},
               {cx: (bboxGroup.x+(bboxGroup.width)/2), cy: (bboxGroup.y+bboxGroup.height),pointer:'s-resize'},
               {cx: bboxGroup.x, cy: (bboxGroup.y+(bboxGroup.height)/2),pointer:'w-resize'},
-              {cx: (bboxGroup.x+bboxGroup.width), cy: (bboxGroup.y+(bboxGroup.height)/2),pointer:'e-resize'}
+              {cx: (bboxGroup.x+bboxGroup.width), cy: (bboxGroup.y+(bboxGroup.height)/2),pointer:'e-resize'},
+
+              
             ];
-            
+            //rotation point
+            this.rotatePoint[0]=({cx: (bboxGroup.x+(bboxGroup.width)/2), cy: (bboxGroup.y-20),pointer:'alias'});
+           
+            //rotate icon line
+            this.rotateLine = "M "+(bboxGroup.x+(bboxGroup.width)/2)+" "+bboxGroup.y+" "+
+                              "L "+(bboxGroup.x+(bboxGroup.width)/2)+" "+(bboxGroup.y-20)+" Z"+
             console.log(this.selectedShapeControlPoints);
   }
 
   reshape:boolean=false;
   reShapeClickDownPoint($event){
-    this.reshape=true;
-    if (this.reshape==true) {
+    setTimeout(() => {
       console.log("reshape click point selected");
       console.log($event.offsetX,$event.offsetY);
       console.log(this.editablepoints)
@@ -394,7 +446,9 @@ editablepoints=[];
       this.matchingindex = this.findStartingPoint(mouseupCordinate,this.shapeDpathCordinates);
       console.log(this.matchingindex);
       }
-      }
+      this.reshape=true;
+    }, 200);
+    
   }
 
   reShapeClickUpPoint($event){
@@ -416,7 +470,7 @@ editablepoints=[];
           this.selectedLine="";
           this.predifineRecangledrawing=true;
         }, 10000);
-        this.reshape=false;
+        
     // this.editablepoints=[];
     // this.shapeDpathCordinates=[];
       //  this.editablepoints=[];
@@ -426,7 +480,7 @@ editablepoints=[];
       //  this.predifineRecangledrawing=true; //to enable draw another circle
       //  this.selectedShapeMovingCordinates=[]; // to delete the moving start point and end point
     }
-
+    this.reshape=false;
 
   }
   // convert d path to arry of cordinates
@@ -482,17 +536,19 @@ editablepoints=[];
     setTimeout(() => {
       console.log("i am from resize down");
 
-      this.isResize=true
+      this.isResize=true;
+      this.isSelected=false;
     }, 200);
+    this.isResize=false;
   }
   reSizeClickUpPoint($event){
     if (this.isResize==true) {
       console.log("i am from resize up ");
-      const resizeUppointX = $event.offsetX;
-      const resizeUppointY = $event.offsetY;
-      const newwidth = resizeUppointX-this.shape_d_paths[this.selectedShapeIndex].centerX;
-      const newheight= resizeUppointY-this.shape_d_paths[this.selectedShapeIndex].centerY;
-      const newradius =  Math.sqrt((newwidth*newwidth) + (newheight*newheight));
+      var resizeUppointX = $event.offsetX;
+      var resizeUppointY = $event.offsetY;
+      var newwidth = resizeUppointX-this.shape_d_paths[this.selectedShapeIndex].centerX;
+      var newheight= resizeUppointY-this.shape_d_paths[this.selectedShapeIndex].centerY;
+      var newradius =  Math.sqrt((newwidth*newwidth) + (newheight*newheight));
       if (this.shape_d_paths[this.selectedShapeIndex].name=="circle") {
         var newCircleLine = "M "+this.shape_d_paths[this.selectedShapeIndex].centerX+" "+this.shape_d_paths[this.selectedShapeIndex].centerY+" "+
         "m -"+newradius+" 0"+" "+
@@ -505,26 +561,84 @@ editablepoints=[];
         this.selectedShapeControlPoints=[];
       }
       else if(this.shape_d_paths[this.selectedShapeIndex].name=="rect"){
-        var startingpointX = this.shape_d_paths[this.selectedShapeIndex].centerX + resizeUppointX;
-        var startingpointY = this.shape_d_paths[this.selectedShapeIndex].centerY + resizeUppointY;
-        var squarewidth = newwidth *2;
-        var squareHeight= newheight *2;
-        var newSquareLine= "M "+startingpointX+" "+startingpointY+" "+
-                                 "L "+(startingpointX+squarewidth)+" "+startingpointY+" "+
-                                 "L "+(startingpointX+squarewidth)+" "+(startingpointY+squareHeight)+" "+
-                                 "L "+startingpointX+" "+(startingpointY+squareHeight)+" Z";
+        console.log("rectangle reshape")
+        var x = this.shape_d_paths[this.selectedShapeIndex].centerX+newwidth ;
+        var y = this.shape_d_paths[this.selectedShapeIndex].centerY-(newheight) ;
+        console.log(x,y);
+        var w = newwidth*2;
+        var h= newheight*2;
+        // var newSquareLine= "M "+startingpointX+" "+startingpointY+" "+
+        //                          "L "+(startingpointX+squarewidth)+" "+startingpointY+" "+
+        //                          "L "+(startingpointX+squarewidth)+" "+(startingpointY+squareHeight)+" "+
+        //                          "L "+startingpointX+" "+(startingpointY+squareHeight)+" Z";
+        var newSquareLine= "M "+(x)+" "+(y)+" "+
+                            "L "+(x)+" "+(y+h)+" "+
+                            "L "+(x-w)+" "+(y+h)+" "+
+                            "L "+(x-w)+" "+(y)+" Z";
+      console.log(this.shape_d_paths[this.selectedShapeIndex]);
       this.shape_d_paths[this.selectedShapeIndex].customShape = newSquareLine;
+      console.log(this.shape_d_paths[this.selectedShapeIndex]);
       this.selectedLine="";
       this.selectedShapeControlPoints=[];
+      this.rotateLine="";
+      this.rotatePoint=[];
       }else{
 
       }
-
     }
     this.isResize=false;
   }
   
-   
+   //rotation
+   isRotate:boolean=false;
+   rotateClickDownPoint(){
+    console.log("i am from rotate down"+this.rotateShapeIndex);
+    this.rotationCordinatesPoint[0]=({x:(this.shape_d_paths[this.rotateShapeIndex].centerX),y:(this.shape_d_paths[this.rotateShapeIndex].centerY)});  
+    console.log(this.rotationCordinatesPoint)  
+    this.isRotate=true;
+  }
+  rotationMouseMove($event){
+    if(this.isRotate==true){
+      console.log("i am from rotate up")
+      console.log($event)
+      var rotateUppointX = $event.offsetX;
+      var rotateUppointY = $event.offsetY;
+      // var angle = Math.atan2(rotateUppointX - this.rotationCordinatesPoint[0].x, - (rotateUppointY - this.rotationCordinatesPoint[0].y) )*(180 / Math.PI);  
+     
+      var groupElement =document.getElementById(this.shape_d_paths[this.rotateShapeIndex].id);// document.querySelector('#selectedGroup');
+      var bboxGroup = (groupElement as any).getBBox();
+      var x= bboxGroup.x+(bboxGroup.width/2);
+      var y= bboxGroup.y-(bboxGroup.height/2);
+      var angle = Math.atan2(rotateUppointX - x, - (rotateUppointY - y) )*(180 / Math.PI);  
+      this.rotationAngle= angle;
+      this.rotationCenterX=this.shape_d_paths[this.rotateShapeIndex].centerX;
+      this.rotationCenterY=this.shape_d_paths[this.rotateShapeIndex].centerY;
+      console.log(x,y,this.rotationCenterX,this.rotationCenterY)
+      console.log(angle);
+    }
+  }
+  
+   rotateClickUpPoint($event){
+    if(this.isRotate==true){
+      console.log("i am from rotate up")
+      console.log($event)
+      // var rotateUppointX = $event.offsetX;
+      // var rotateUppointY = $event.offsetY;
+      // var angle = Math.atan2(rotateUppointX - this.rotationCordinatesPoint[0].x, - (rotateUppointY - this.rotationCordinatesPoint[0].y) )*(180 / Math.PI);  
+      // // var angle = Math.atan2(rotateUppointX - 200, - (rotateUppointY - 300) )*(180 / Math.PI);  
+      // this.rotationAngle= angle;
+      // console.log(angle)    ;
+    }
+    this.isRotate=false;
+    // this.rotateShapeIndex="";
+    this.selectedLine="";
+    this.selectedShapeControlPoints=[];
+    this.rotatePoint=[];
+    this.rotateLine="";
+    // this.rotationAngle=0;
+    // this.rotationCenterX="";
+    // this.rotationCenterY="";
+   }
 }
 
 
