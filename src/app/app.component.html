@@ -25,10 +25,10 @@
       </div>
       <div class="row justify-content-between">
           <div class="svgDrawingbox">
-              <svg  width="800" height="400"    (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)" (mouseup)="rotateClickUpPoint($event)" (mousemove)="rotationMouseMove($event)" (mousemove)="customShapeMove($event)">
+              <svg  width="800" height="400"    (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)" (mouseup)="rotateClickUpPoint($event)" (mousemove)="rotationMouseMove($event)" (mousemove)="customShapeMove($event)" (mousemove)="drawShape($event)">
                 <!-- [attr.transform]="'translate('+tx+','+ty+')'" -->
-                <g id="rotateShapeId">
-                  <path   *ngFor="let shape_d_path of shape_d_paths; index as i" [attr.id]="shape_d_path.id" draggable="true" clickable="true" (click)="selectShape(i)" (dblclick)="deleteShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'" />
+                <g *ngFor="let shape_d_path of shape_d_paths; index as i" [attr.id]="shape_d_path.id">
+                  <path  draggable="true" clickable="true" (click)="selectShape(i)" (dblclick)="deleteShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'" />
                   <!-- <path  *ngFor="let shape_d_path of shape_d_paths; index as i" id="#draw" (click)="selectShape(i,$event)" (dblclick)="getShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" transform=""/> -->
                 </g>
               <path   [attr.d]="line" fill="transparent" stroke="black" stroke-width="5"/>

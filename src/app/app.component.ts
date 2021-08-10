@@ -61,6 +61,8 @@ export class AppComponent {
   isCustomMove: boolean=false;
   rotationCenterX: any;
   rotationCenterY: any;
+  drawingShapeX: number;
+  drawingShapeY: number;
  
   constructor(@Inject(DOCUMENT) document){
 
@@ -120,43 +122,35 @@ export class AppComponent {
     this.line="";
   }
 
+  isDrawShape:boolean=false;
   //mouse up and down event shape drawing
   mouseDown($event){
     // this.cordinates=[];
     if (this.predifineRecangledrawing==true || this.predifineCircledrawing==true) {
-      this.mouseEventCordinates.push({x:$event.offsetX, y:$event.offsetY});
+      this.mouseEventCordinates[0]=({x:$event.offsetX, y:$event.offsetY});
       this.circleX = $event.offsetX;
       this.circleY = $event.offsetY
     }
+    this.isDrawShape=  true;
   }
-  mouseUp($event){
-    // this.cordinates=[];
-    this.mouseEventCordinates.push({x:$event.offsetX, y:$event.offsetY});
+  drawShape($event){
+    if (this.isDrawShape==true) {
+      // console.log($event);
+      this.mouseEventCordinates[1]=({x:$event.offsetX, y:$event.offsetY});
     if (this.mouseEventCordinates.length==2) {
-      var x= this.mouseEventCordinates[1].x-this.mouseEventCordinates[0].x;
-      var y= this.mouseEventCordinates[1].y-this.mouseEventCordinates[0].y;
-      this.radius = Math.sqrt((x*x) + (y*y));
+      this.drawingShapeX= this.mouseEventCordinates[1].x-this.mouseEventCordinates[0].x;
+      this.drawingShapeY= this.mouseEventCordinates[1].y-this.mouseEventCordinates[0].y;
+      this.radius = Math.sqrt(( this.drawingShapeX* this.drawingShapeX) + ( this.drawingShapeY* this.drawingShapeY));
     }
     
     //react angle drawing
     if(this.predifineRecangledrawing==true){
       this.predifinedLine= "M "+this.mouseEventCordinates[0].x+" "+this.mouseEventCordinates[0].y+" "+
-      "L "+(this.mouseEventCordinates[0].x+x)+" "+this.mouseEventCordinates[0].y+" "+
-      "L "+(this.mouseEventCordinates[0].x+x)+" "+(this.mouseEventCordinates[0].y+y)+" "+
-      "L "+this.mouseEventCordinates[0].x+" "+(this.mouseEventCordinates[0].y+y)+" Z";
-      // this.line=this.predifinedLine;
-      this.shape_d_paths.push({
-                                customShape:this.predifinedLine,
-                                color:this.getRandomColor(),
-                                centerX:this.mouseEventCordinates[0].x+(x/2),
-                                centerY:this.mouseEventCordinates[0].y+(y/2),
-                                width:x,
-                                height:y,
-                                radius:'',
-                                name:'rect',
-                                id:Guid.create()
-                              });
-      this.predifinedLine="";
+      "L "+(this.mouseEventCordinates[0].x+ this.drawingShapeX)+" "+this.mouseEventCordinates[0].y+" "+
+      "L "+(this.mouseEventCordinates[0].x+ this.drawingShapeX)+" "+(this.mouseEventCordinates[0].y+ this.drawingShapeY)+" "+
+      "L "+this.mouseEventCordinates[0].x+" "+(this.mouseEventCordinates[0].y+ this.drawingShapeY)+" Z";
+      this.line=this.predifinedLine;
+     
     }
     // circle drawing
     if (this.predifineCircledrawing==true && this.radius>0) {
@@ -165,25 +159,57 @@ export class AppComponent {
       'a '+this.radius+","+this.radius+" 0"+" 1,1 "+(this.radius*2)+",0"+" "+
       'a '+this.radius+","+this.radius+" 0"+" 1,1 -"+(this.radius*2)+",0";
       
-      // this.line=this.predifinedCircleLine;
+      this.line=this.predifinedCircleLine;
+      
+      // this.predifinedCircleLine=""
+      // console.log("circle"+this.predifinedCircleLine);
+    }
+      
+    }
+
+  }
+  mouseUp($event){
+    // this.cordinates=[];
+    if(this.predifineRecangledrawing==true)
+    {
       this.shape_d_paths.push({
-                                customShape:this.predifinedCircleLine,
-                                color:this.getRandomColor(),
-                                centerX:this.circleX,
-                                centerY:this.circleY,
-                                radius:this.radius,
-                                width:'',
-                                height:'',
-                                name:'circle',
-                                id:Guid.create()
-                              });
-      this.predifinedCircleLine=""
-      console.log("circle"+this.predifinedCircleLine);
+                                  customShape:this.predifinedLine,
+                                  color:this.getRandomColor(),
+                                  centerX:this.mouseEventCordinates[0].x+(this.drawingShapeX/2),
+                                  centerY:this.mouseEventCordinates[0].y+(this.drawingShapeY/2),
+                                  width:this.drawingShapeX,
+                                  height:this.drawingShapeY,
+                                  radius:'',
+                                  name:'rect',
+                                  id:Guid.create()
+                                });
+      this.predifinedLine="";
+      this.line="";
+    }
+    if(this.predifineCircledrawing==true) {
+      this.shape_d_paths.push({
+                                  customShape:this.predifinedCircleLine,
+                                  color:this.getRandomColor(),
+                                  centerX:this.circleX,
+                                  centerY:this.circleY,
+                                  radius:this.radius,
+                                  width:'',
+                                  height:'',
+                                  name:'circle',
+                                  id:Guid.create()
+                                });
+    this.predifinedCircleLine="";
+    this.line="";
     }
     //to set all related memories to initial values for new shape
     this.mouseEventCordinates=[];
     this.circleX;
     this.circleY;
+    this.isDrawShape=  false;
+    this.drawingShapeX;
+    this.drawingShapeY;
+    
+    this.radius;
   }
   generateShape(){
     this.customShape=true;
