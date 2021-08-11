@@ -19,10 +19,9 @@ export class AddtionComponentComponent implements OnInit {
     this.result= this.value1+this.value2+this.value3;
     console.log(this.value1)
     console.log(this.result)
+    this.message.additionResult=this.result
   }
-  emit(){
-    this.message.addResult(this.result);
-  }
+
   ngOnInit(): void {
   }
 }

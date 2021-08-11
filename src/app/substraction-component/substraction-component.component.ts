@@ -19,8 +19,6 @@ export class SubstractionComponentComponent implements OnInit {
     this.result= this.value1-this.value2-this.value3;
     console.log(this.value1)
     console.log(this.result)
-  }
-  emit(){
     this.message.subResult=this.result;
   }
   ngOnInit(): void {

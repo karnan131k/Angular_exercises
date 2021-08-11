@@ -19,10 +19,9 @@ export class MultiplyComponentComponent implements OnInit {
     this.result= this.value1*this.value2*this.value3;
     console.log(this.value1)
     console.log(this.result)
-  }
-  emit(){
     this.message.mulResult=this.result;
   }
+
   ngOnInit(): void {
   }
 }

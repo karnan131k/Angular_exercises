@@ -17,7 +17,5 @@ export class MessageService {
    setData(data: number){
     this.behaviourSubject.next(data);
    }
-   addResult(data: number){
-     this.additionResult=data;
-   }
+
 }
