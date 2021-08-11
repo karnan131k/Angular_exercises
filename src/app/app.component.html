@@ -25,7 +25,7 @@
       </div>
       <div class="row justify-content-between">
           <div class="svgDrawingbox">
-              <svg  width="800" height="400"    (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)" (mouseup)="rotateClickUpPoint($event)" (mousemove)="rotationMouseMove($event)" (mousemove)="customShapeMove($event)" (mousemove)="drawShape($event)">
+              <svg  width="1200" height="400"    (click)="mouseClick($event)" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)" (mouseup)="selectedShapeMouseUp($event)"  (mouseup)="reShapeClickUpPoint($event)" (mouseup)="reSizeClickUpPoint($event)" (mouseup)="rotateClickUpPoint($event)" (mousemove)="rotationMouseMove($event)" (mousemove)="customShapeMove($event)" (mousemove)="drawShape($event)">
                 <!-- [attr.transform]="'translate('+tx+','+ty+')'" -->
                 <g *ngFor="let shape_d_path of shape_d_paths; index as i" [attr.id]="shape_d_path.id">
                   <path  draggable="true" clickable="true" (click)="selectShape(i)" (dblclick)="deleteShapeIndex()" (mousedown)="selectedShapeMouseDown($event)" [attr.d]="shape_d_path.customShape" fill="transparent" [attr.stroke]="shape_d_path.color" stroke-width="5" [attr.transform]="'rotate('+rotationAngle+','+rotationCenterX+','+rotationCenterY+')'" />
@@ -50,14 +50,30 @@
               </svg>
           </div>
       </div>
-      <button [ngClass]="{'activecolor' : customtoggle, 'notactivecolor': !customtoggle}" class="btn btn-info" (click)="generateShape()" >Generate custom Shape</button>&nbsp;
-      <button [ngClass]="{'activecolor' : reactangletoggle, 'notactivecolor': !reactangletoggle}" class="btn btn-info" (click)="generatePredifinedReactangleShape()">Generate Rectangle Shape</button>&nbsp;
-      <button [ngClass]="{'activecolor' : circletoggle, 'notactivecolor': !circletoggle}" class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>&nbsp;
-      <button class="btn btn-danger" (click)="deleteShapeIndex()">Delete</button>
-      <!-- <svg height="400" width="800">
-        <rect x="5" y="5" width="40" height="40" fill="red"
-        transform="translate(0 150)" />
-      </svg> -->
+      <div class="row justify-content-between">
+
+        <button [ngClass]="{'activecolor' : customtoggle, 'notactivecolor': !customtoggle}" class="btn btn-info" (click)="generateShape()" >Generate custom Shape</button>&nbsp;
+        <button [ngClass]="{'activecolor' : reactangletoggle, 'notactivecolor': !reactangletoggle}" class="btn btn-info" (click)="generatePredifinedReactangleShape()">Generate Rectangle Shape</button>&nbsp;
+        <button [ngClass]="{'activecolor' : circletoggle, 'notactivecolor': !circletoggle}" class="btn btn-info" (click)="generatePredifinedCircleShape()">Generate Circle Shape</button>&nbsp;
+        <button class="btn btn-danger" (click)="deleteShapeIndex()">Delete</button>
+      </div>
   </div>
   </div>
+  <hr>
+  <div class="row">
+    <div class="loadPlace">
+      <!-- <p>main component</p>
+      <div class="row justify-content-center">
+        <app-layoutbox></app-layoutbox>
+      </div> -->
+      <ng-template appDynamicLayout ></ng-template>
+    </div>
+  </div>
+  <div class="row justify-content-between mb-5">
+    <button class="btn btn-warning" (click)="loadComponent(0)">Add</button>
+    <button class="btn btn-success" (click)="loadComponent(1)">Sub</button>
+    <button class="btn btn-info" (click)="loadComponent(2)">Multi</button>
+    <button class="btn btn-danger" (click)="loadComponent(3)">Divide</button>
+  </div>
+  <hr>
 </div>

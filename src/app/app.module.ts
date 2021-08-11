@@ -9,6 +9,12 @@ import { ComponentThreeComponent } from './component-three/component-three.compo
 import { MessageService } from 'src/service/message.service';
 import { CustomstyleDirective } from './directive/customstyle.directive';
 import { NgxSvgModule } from 'ngx-svg';
+import { AddtionComponentComponent } from './addtion-component/addtion-component.component';
+import { SubstractionComponentComponent } from './substraction-component/substraction-component.component';
+import { MultiplyComponentComponent } from './multiply-component/multiply-component.component';
+import { DivisionComponentComponent } from './division-component/division-component.component';
+import { LayoutboxComponent } from './layoutbox/layoutbox.component';
+import { DynamicLayoutDirective } from './directive/dynamic-layout.directive';
 
 @NgModule({
   declarations: [
@@ -16,13 +22,20 @@ import { NgxSvgModule } from 'ngx-svg';
     ComponentOneComponent,
     ComponentTwoComponent,
     ComponentThreeComponent,
-    CustomstyleDirective
+    CustomstyleDirective,
+    AddtionComponentComponent,
+    SubstractionComponentComponent,
+    MultiplyComponentComponent,
+    DivisionComponentComponent,
+    LayoutboxComponent,
+    DynamicLayoutDirective,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgxSvgModule
   ],
+  entryComponents:[AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent,LayoutboxComponent],
   providers: [MessageService],
   bootstrap: [AppComponent]
 })

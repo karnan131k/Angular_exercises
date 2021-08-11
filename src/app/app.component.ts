@@ -1,8 +1,14 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject,ViewChild,ComponentFactoryResolver } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common'; 
 import { Guid } from 'guid-typescript';
+import { DynamicLayoutDirective } from './directive/dynamic-layout.directive';
+import { AddtionComponentComponent } from './addtion-component/addtion-component.component';
+import { SubstractionComponentComponent } from './substraction-component/substraction-component.component';
+import { MultiplyComponentComponent } from './multiply-component/multiply-component.component';
+import { DivisionComponentComponent } from './division-component/division-component.component';
+import { LayoutboxComponent } from './layoutbox/layoutbox.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -63,9 +69,17 @@ export class AppComponent {
   rotationCenterY: any;
   drawingShapeX: number;
   drawingShapeY: number;
- 
-  constructor(@Inject(DOCUMENT) document){
 
+  @ViewChild(DynamicLayoutDirective,{static:true})
+  childRef:DynamicLayoutDirective;
+  components = [AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent,LayoutboxComponent];
+  constructor(@Inject(DOCUMENT) document,public factoryRes:ComponentFactoryResolver){
+
+  }
+  loadComponent(id){
+    // this.childRef.viewRef.clear();
+    const resolveFactory = this.factoryRes.resolveComponentFactory(this.components[id]);
+    this.childRef.viewRef.createComponent(resolveFactory);
   }
   // rondom color generate
   getRandomColor() {
@@ -665,6 +679,10 @@ editablepoints=[];
     // this.rotationCenterX="";
     // this.rotationCenterY="";
    }
+
+
+  
+
 }
 
 
