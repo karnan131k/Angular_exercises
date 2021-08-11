@@ -9,6 +9,8 @@ import { SubstractionComponentComponent } from './substraction-component/substra
 import { MultiplyComponentComponent } from './multiply-component/multiply-component.component';
 import { DivisionComponentComponent } from './division-component/division-component.component';
 import { LayoutboxComponent } from './layoutbox/layoutbox.component';
+import { MessageService } from 'src/service/message.service';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -73,9 +75,13 @@ export class AppComponent {
   @ViewChild(DynamicLayoutDirective,{static:true})
   childRef:DynamicLayoutDirective;
   components = [AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent,LayoutboxComponent];
-  constructor(@Inject(DOCUMENT) document,public factoryRes:ComponentFactoryResolver){
+  constructor(@Inject(DOCUMENT) document,public factoryRes:ComponentFactoryResolver,public message:MessageService){
 
   }
+  additionResult = this.message.additionResult;
+  subResult=this.message.subResult;
+  mulResult=this.message.mulResult;
+  divResult=this.message.divResult;
   loadComponent(id){
     // this.childRef.viewRef.clear();
     const resolveFactory = this.factoryRes.resolveComponentFactory(this.components[id]);

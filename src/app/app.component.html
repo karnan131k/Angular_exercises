@@ -69,6 +69,12 @@
       <ng-template appDynamicLayout ></ng-template>
     </div>
   </div>
+  <div class="row justify-content-between">
+    <p>Addtion answer :- {{ message.additionResult }}</p>
+    <p>Substraction answer :- {{ message.subResult }}</p>
+    <p>Multiplication answer :- {{ message.mulResult }}</p>
+    <p>Division answer :- {{ message.divResult }}</p>
+  </div>
   <div class="row justify-content-between mb-5">
     <button class="btn btn-warning" (click)="loadComponent(0)">Add</button>
     <button class="btn btn-success" (click)="loadComponent(1)">Sub</button>

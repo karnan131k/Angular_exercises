@@ -13,8 +13,8 @@ import { AddtionComponentComponent } from './addtion-component/addtion-component
 import { SubstractionComponentComponent } from './substraction-component/substraction-component.component';
 import { MultiplyComponentComponent } from './multiply-component/multiply-component.component';
 import { DivisionComponentComponent } from './division-component/division-component.component';
-import { LayoutboxComponent } from './layoutbox/layoutbox.component';
 import { DynamicLayoutDirective } from './directive/dynamic-layout.directive';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,15 +27,15 @@ import { DynamicLayoutDirective } from './directive/dynamic-layout.directive';
     SubstractionComponentComponent,
     MultiplyComponentComponent,
     DivisionComponentComponent,
-    LayoutboxComponent,
     DynamicLayoutDirective,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxSvgModule
+    NgxSvgModule,
+    FormsModule
   ],
-  entryComponents:[AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent,LayoutboxComponent],
+  entryComponents:[AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent],
   providers: [MessageService],
   bootstrap: [AppComponent]
 })

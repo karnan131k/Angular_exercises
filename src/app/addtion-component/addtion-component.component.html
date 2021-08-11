@@ -1,6 +1,20 @@
-<div class="container m-2">
-    <p style=" margin-left: 46px;">addtion-component</p>
-    <div class="row justify-content-center">
-        <app-layoutbox></app-layoutbox>
+<div class="container">
+    <div class="layoutBox ">
+        
+            <div class="row justify-content-between">
+              <div class="col-auto">
+                <input type="number" name="" [(ngModel)]="value1" class="form-control" placeholder="">
+              </div>
+              <div class="col-auto">
+                <input type="number" name="" [(ngModel)]="value2" class="form-control" placeholder="">
+              </div>
+              <div class="col-auto">
+                <input type="number" name="" [(ngModel)]="value3" class="form-control" placeholder="">
+              </div>
+              <div class="col-auto">
+                <button type="submit" name="" class="btn btn-warning" (click)="addition($event)">Addition</button>
+              </div>
+            </div>
+          
     </div>
 </div>

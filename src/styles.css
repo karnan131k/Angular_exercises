@@ -16,23 +16,22 @@
     clear: both;
   }
 .loadPlace{
-  height: 650px;
+  height: 400px;
   width: 1200px;
-  margin-bottom: 15px;
-  margin-top: 15px;
+  padding: 15px;
   border: 5px solid black;
   clear: both;
 }
 .layoutBox{
-  height: 100px;
-  width: 1000px;
-  padding: 15px;
-  border: 5px solid black;
-  clear: both;
+  height: auto;
+  width: auto;
+  padding: 10px;
+  border: 1px solid black;
   text-align: center;
+  margin-bottom: 10px;
 }
 .input1{
-  height: 40px;
+  height: 30px;
   width: 200px;
   border: 5px solid black;
   clear: both;
