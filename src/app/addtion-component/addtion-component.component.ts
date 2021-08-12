@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'src/service/message.service';
 
 @Component({
@@ -7,12 +7,13 @@ import { MessageService } from 'src/service/message.service';
   styleUrls: ['./addtion-component.component.css']
 })
 export class AddtionComponentComponent implements OnInit {
-
   constructor(private message:MessageService) { }
-  value1:number;
-  value2:number;
-  value3:number;
-  result:number;
+  @Input() inputBoxDatas: any=[];
+  resultBoxDatas:any =[];
+  value1:any=0;
+  value2:any=0;
+  value3:any=0;
+  result:any=0;
   addition($event){
     $event.preventDefault();
     console.log("addition")
@@ -23,5 +24,7 @@ export class AddtionComponentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.inputBoxDatas)
   }
+  
 }

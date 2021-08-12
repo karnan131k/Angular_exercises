@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'src/service/message.service';
 
 @Component({
@@ -7,12 +7,13 @@ import { MessageService } from 'src/service/message.service';
   styleUrls: ['./division-component.component.css']
 })
 export class DivisionComponentComponent implements OnInit {
+  @Input() inputBoxDatas: any=[];
 
   constructor(private message:MessageService) { }
-  value1:number;
-  value2:number;
-  value3:number;
-  result:number;
+  value1:number=1;
+  value2:number=1;
+  value3:number=1;
+  result:number=1;
   division($event){
     $event.preventDefault();
     console.log("division")

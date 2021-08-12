@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'src/service/message.service';
 
 @Component({
@@ -7,12 +7,12 @@ import { MessageService } from 'src/service/message.service';
   styleUrls: ['./substraction-component.component.css']
 })
 export class SubstractionComponentComponent implements OnInit {
-
+  @Input() inputBoxDatas: any=[];
   constructor(private message:MessageService) { }
-  value1:number;
-  value2:number;
-  value3:number;
-  result:number;
+  value1:number=0;
+  value2:number=0;
+  value3:number=0;
+  result:number=0;
   substract($event){
     $event.preventDefault();
     console.log("substract")

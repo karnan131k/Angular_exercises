@@ -3,13 +3,13 @@
         
             <div class="row justify-content-between">
               <div class="col-auto">
-                <input type="number" [(ngModel)]="value1" class="form-control" placeholder="">
+                <input type="number" *ngIf="inputBoxDatas.isInput1" [(ngModel)]="value1" class="form-control" placeholder="input 1">
               </div>
               <div class="col-auto">
-                <input type="number" [(ngModel)]="value2" class="form-control" placeholder="">
+                <input type="number" *ngIf="inputBoxDatas.isInput2" [(ngModel)]="value2" class="form-control" placeholder="input 2">
               </div>
               <div class="col-auto">
-                <input type="number" [(ngModel)]="value3" class="form-control" placeholder="">
+                <input type="number" *ngIf="inputBoxDatas.isInput3" [(ngModel)]="value3" class="form-control" placeholder="input 3">
               </div>
               <div class="col-auto">
                 <button class="btn btn-warning" (click)="substract($event)">Substract</button>

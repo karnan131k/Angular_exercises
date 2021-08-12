@@ -9,7 +9,7 @@ import { SubstractionComponentComponent } from './substraction-component/substra
 import { MultiplyComponentComponent } from './multiply-component/multiply-component.component';
 import { DivisionComponentComponent } from './division-component/division-component.component';
 import { LayoutboxComponent } from './layoutbox/layoutbox.component';
-import { MessageService } from 'src/service/message.service';
+import { componentType, MessageService } from 'src/service/message.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 @Component({
   selector: 'app-root',
@@ -76,7 +76,6 @@ export class AppComponent {
   childRef:DynamicLayoutDirective;
   components = [AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent,LayoutboxComponent];
   constructor(@Inject(DOCUMENT) document,public factoryRes:ComponentFactoryResolver,public message:MessageService){
-
   }
   additionResult = this.message.additionResult;
   subResult=this.message.subResult;
@@ -84,9 +83,48 @@ export class AppComponent {
   divResult=this.message.divResult;
   loadComponent(id){
     // this.childRef.viewRef.clear();
-    const resolveFactory = this.factoryRes.resolveComponentFactory(this.components[id]);
-    this.childRef.viewRef.createComponent(resolveFactory);
+    // const resolveFactory = this.factoryRes.resolveComponentFactory(this.components[id]);
+    // this.childRef.viewRef.createComponent(resolveFactory);
+    this.message.getdynamicData().forEach(layout=>{
+      switch (layout.component) {
+        case componentType.ADD:
+          if (id==0) {
+            const resolveFactoryadd = this.factoryRes.resolveComponentFactory(AddtionComponentComponent);
+            const addcomponentRef =this.childRef.viewRef.createComponent(resolveFactoryadd);
+            addcomponentRef.instance.inputBoxDatas=layout;
+            console.log(addcomponentRef.instance.inputBoxDatas)
+          }
+          break;
+        case componentType.SUB:
+          if (id==1) {
+            const resolveFactorysub = this.factoryRes.resolveComponentFactory(SubstractionComponentComponent);
+            const subcomponentRef = this.childRef.viewRef.createComponent(resolveFactorysub);
+            subcomponentRef.instance.inputBoxDatas=layout;
+            console.log(subcomponentRef.instance.inputBoxDatas)
+          }
+          break;
+        case componentType.MUL:
+          if (id==2) {
+            const resolveFactorymul = this.factoryRes.resolveComponentFactory(MultiplyComponentComponent);
+            const mulcomponentRef = this.childRef.viewRef.createComponent(resolveFactorymul);
+            mulcomponentRef.instance.inputBoxDatas=layout;
+            console.log(mulcomponentRef.instance.inputBoxDatas)
+          }
+          break;
+        case componentType.DIV:
+          if (id==3) {
+            const resolveFactorydiv = this.factoryRes.resolveComponentFactory(DivisionComponentComponent);
+            const divcomponentRef = this.childRef.viewRef.createComponent(resolveFactorydiv);
+            divcomponentRef.instance.inputBoxDatas=layout;
+            console.log(divcomponentRef.instance.inputBoxDatas)
+          }
+          break;
+        default:
+          break;
+      }
+    })
   }
+
   // rondom color generate
   getRandomColor() {
     var letters = '0123456789ABCDEF';
