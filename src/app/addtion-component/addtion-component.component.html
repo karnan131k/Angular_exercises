@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container" cdkDrag cdkDropList (cdkDropListDropped)="drop($event)">
     <div class="layoutBox ">
         
-            <div class="row justify-content-between" >
+            <div class="row justify-content-between">
               <div class="col-auto">
                 <input type="number" *ngIf="inputBoxDatas.isInput1" name="" [(ngModel)]="value1" class="form-control" placeholder="input 1">
               </div>
@@ -13,6 +13,9 @@
               </div>
               <div class="col-auto">
                 <button type="submit" name="" class="btn btn-warning" (click)="addition($event)">Addition</button>
+              </div>
+              <div class="col-auto">
+                <button type="submit" name="" class="btn btn-danger" (click)="delete(0)">Delete</button>
               </div>
             </div>
           

@@ -15,7 +15,7 @@ import { MultiplyComponentComponent } from './multiply-component/multiply-compon
 import { DivisionComponentComponent } from './division-component/division-component.component';
 import { DynamicLayoutDirective } from './directive/dynamic-layout.directive';
 import { FormsModule } from '@angular/forms';
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +33,8 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     NgxSvgModule,
-    FormsModule
+    FormsModule,
+    DragDropModule
   ],
   entryComponents:[AddtionComponentComponent,SubstractionComponentComponent,MultiplyComponentComponent,DivisionComponentComponent],
   providers: [MessageService],

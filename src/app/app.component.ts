@@ -10,7 +10,9 @@ import { MultiplyComponentComponent } from './multiply-component/multiply-compon
 import { DivisionComponentComponent } from './division-component/division-component.component';
 import { LayoutboxComponent } from './layoutbox/layoutbox.component';
 import { componentType, MessageService } from 'src/service/message.service';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -125,6 +127,20 @@ export class AppComponent {
     })
   }
 
+  //delete component method
+  deleteComponet(id:number){
+    console.log("hit")
+    console.log(this.components)
+    this.childRef.viewRef.remove(id);
+    this.components.splice(id,1);
+    console.log(this.components)
+  }
+
+
+  drop($event: CdkDragDrop<any[]>) {
+    this.childRef.viewRef.move(this.components[$event.previousIndex].hostView, $event.currentIndex);
+    moveItemInArray(this.components, $event.previousIndex, $event.currentIndex);
+  }
   // rondom color generate
   getRandomColor() {
     var letters = '0123456789ABCDEF';

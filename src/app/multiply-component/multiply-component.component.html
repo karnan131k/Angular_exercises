@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" cdkDrag cdkDropList (cdkDropListDropped)="drop($event)">
     <div class="layoutBox ">
         
             <div class="row justify-content-between">
@@ -13,6 +13,9 @@
               </div>
               <div class="col-auto">
                 <button class="btn btn-warning" (click)="multiply($event)">multiply</button>
+              </div>
+              <div class="col-auto">
+                <button type="submit" name="" class="btn btn-danger" (click)="delete(2)">Delete</button>
               </div>
             </div>
           
